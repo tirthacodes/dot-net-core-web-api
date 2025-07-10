@@ -8,33 +8,72 @@ namespace dot_net_core_web_api.Controllers
     public class StudentController : ControllerBase
     {
         [HttpGet]
-        public IEnumerable<Student> GetStudentName()
+        public ActionResult<IEnumerable<Student>> GetStudentName()
         {
-            return CollegeRepository.Students;
+            //Ok - 200 means success
+            return Ok(CollegeRepository.Students);
         }
 
         [HttpGet("{id:int}")]
-        public Student GetStudentbyId(int id)
+        public ActionResult<Student> GetStudentbyId(int id)
         {
-            return CollegeRepository.Students.Where(n => n.Id == id).FirstOrDefault();
+            //bad request - 400 - client error
+            if(id <= 0)
+            {
+                return BadRequest();
+            }
+
+            var student = CollegeRepository.Students.Where(n => n.Id == id).FirstOrDefault();
+
+            //notfound 404
+            if(student == null)
+            {
+                return NotFound($"The student with id {id} not found.");
+            }
+
+            //ok - success 200
+            return Ok(student);
         }
 
-        [HttpGet("{name}")]
-        public Student GetStudentbyName(string name)
+        private Student GetStudentbyIdInfo(int id)
         {
-            return CollegeRepository.Students.Where(n => n.StudentName == name).FirstOrDefault();
+            return CollegeRepository.Students.FirstOrDefault(s => s.Id == id);
+        }
+
+
+        [HttpGet("{name:alpha}")]
+        public ActionResult<Student> GetStudentbyName(string name)
+        {
+
+            //bad request - 400 - client error
+            if (string.IsNullOrEmpty(name))
+            {
+                return BadRequest();
+            }
+
+            var student = CollegeRepository.Students.Where(n => n.StudentName == name).FirstOrDefault();
+
+            //notfound 404
+            if (student == null)
+            {
+                return NotFound($"The student with name {name} not found.");
+            }
+
+
+            //200 = ok success
+            return Ok(student);
         }
 
         [HttpDelete("{id:int}", Name ="DeleteStudentbyID")]
-        public string DeleteStudentbyID(int id)
+        public ActionResult<string> DeleteStudentbyID(int id)
         {
-            var student = GetStudentbyId(id);
-            if (student != null)
+            var student = GetStudentbyIdInfo(id);
+            if(student == null)
             {
-                CollegeRepository.Students.Remove(student);
-                return $"Student with {id} successfully deleted!";
+                return NotFound($"The student with id {id} not found.");
             }
-            return "Student ID didn't match";
+            CollegeRepository.Students.Remove(student);
+            return Ok($"Student with ID {id} successfully deleted!");
         }
     }
 }
