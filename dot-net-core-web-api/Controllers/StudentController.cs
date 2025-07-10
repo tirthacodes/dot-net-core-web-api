@@ -8,6 +8,9 @@ namespace dot_net_core_web_api.Controllers
     public class StudentController : ControllerBase
     {
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
         public ActionResult<IEnumerable<Student>> GetStudentName()
         {
             //Ok - 200 means success
@@ -15,6 +18,10 @@ namespace dot_net_core_web_api.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<Student> GetStudentbyId(int id)
         {
             //bad request - 400 - client error
@@ -42,6 +49,10 @@ namespace dot_net_core_web_api.Controllers
 
 
         [HttpGet("{name:alpha}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<Student> GetStudentbyName(string name)
         {
 
@@ -63,8 +74,12 @@ namespace dot_net_core_web_api.Controllers
             //200 = ok success
             return Ok(student);
         }
-
+       
         [HttpDelete("{id:int}", Name ="DeleteStudentbyID")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<string> DeleteStudentbyID(int id)
         {
             var student = GetStudentbyIdInfo(id);
