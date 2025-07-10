@@ -13,6 +13,13 @@ namespace dot_net_core_web_api.Controllers
 
         public ActionResult<IEnumerable<Student>> GetStudentName()
         {
+            var students = CollegeRepository.Students.Select(s => new StudentDTO()
+            {
+                Id = s.Id,
+                StudentName = s.StudentName,
+                Address = s.Address,
+                Email = s.Email
+            });
             //Ok - 200 means success
             return Ok(CollegeRepository.Students);
         }
@@ -22,7 +29,7 @@ namespace dot_net_core_web_api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<Student> GetStudentbyId(int id)
+        public ActionResult<StudentDTO> GetStudentbyId(int id)
         {
             //bad request - 400 - client error
             if(id <= 0)
@@ -38,8 +45,16 @@ namespace dot_net_core_web_api.Controllers
                 return NotFound($"The student with id {id} not found.");
             }
 
+            var studentDTO = new StudentDTO
+            {
+                Id = student.Id,
+                StudentName = student.StudentName,
+                Address = student.Address,
+                Email = student.Email
+            };
+
             //ok - success 200
-            return Ok(student);
+            return Ok(studentDTO);
         }
 
         private Student GetStudentbyIdInfo(int id)
@@ -53,7 +68,7 @@ namespace dot_net_core_web_api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<Student> GetStudentbyName(string name)
+        public ActionResult<StudentDTO> GetStudentbyName(string name)
         {
 
             //bad request - 400 - client error
@@ -70,9 +85,17 @@ namespace dot_net_core_web_api.Controllers
                 return NotFound($"The student with name {name} not found.");
             }
 
+            var studentDTO = new StudentDTO
+            {
+                Id = student.Id,
+                StudentName = student.StudentName,
+                Address = student.Address,
+                Email = student.Email
+            };
+
 
             //200 = ok success
-            return Ok(student);
+            return Ok(studentDTO);
         }
        
         [HttpDelete("{id:int}", Name ="DeleteStudentbyID")]
@@ -92,3 +115,4 @@ namespace dot_net_core_web_api.Controllers
         }
     }
 }
+
