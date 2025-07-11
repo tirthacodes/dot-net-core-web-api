@@ -97,6 +97,38 @@ namespace dot_net_core_web_api.Controllers
             //200 = ok success
             return Ok(studentDTO);
         }
+
+
+        [HttpPost]
+        [HttpGet("Create")]
+        //route: api/student/create
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public ActionResult<StudentDTO> CreateStudent([FromBody] StudentDTO model)
+        {
+
+            if (model == null)
+            {
+                return BadRequest();
+            }
+
+            int newId = CollegeRepository.Students.LastOrDefault().Id + 1;
+            Student student = new Student
+            {
+                Id = newId,
+                StudentName = model.StudentName,
+                Address = model.Address,
+                Email = model.Email
+            };
+
+            CollegeRepository.Students.Add(student);
+
+            model.Id = student.Id;
+
+            return Ok(student);
+        }
        
         [HttpDelete("{id:int}", Name ="DeleteStudentbyID")]
         [ProducesResponseType(StatusCodes.Status200OK)]
