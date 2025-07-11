@@ -24,7 +24,7 @@ namespace dot_net_core_web_api.Controllers
             return Ok(CollegeRepository.Students);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name ="GetStudentbyId")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -103,7 +103,7 @@ namespace dot_net_core_web_api.Controllers
         [HttpGet("Create")]
         //route: api/student/create
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<StudentDTO> CreateStudent([FromBody] StudentDTO model)
@@ -126,8 +126,10 @@ namespace dot_net_core_web_api.Controllers
             CollegeRepository.Students.Add(student);
 
             model.Id = student.Id;
-
-            return Ok(student);
+            //status201
+            //https://localhost:7067/api/student/4
+            //new student details
+            return CreatedAtRoute("GetStudentbyId", new {id = model.Id }, model);
         }
        
         [HttpDelete("{id:int}", Name ="DeleteStudentbyID")]
