@@ -8,15 +8,15 @@ namespace dot_net_core_web_api.Controllers
     [ApiController]
     public class DemoController : Controller
     {
-
+        //loosely coupled dependency injection
 
         private readonly IMyLogger _myLogger;
-        public DemoController()
+        public DemoController(IMyLogger myLogger)
         {
-            _myLogger = new LogToFile();
+            _myLogger = myLogger;
         }
 
-        [HttpGet]
+        [HttpGet] 
         public IActionResult Index()
         {
             _myLogger.Log("Index method started");
