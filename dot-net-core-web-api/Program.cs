@@ -9,6 +9,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+//add scoped: one object for each request shared by controllers
+//add singleton: only one object for all the request
+//add transient: different obj for controller/bglayer/services of even same request, for every dependency injection, it will create a brand new object
 builder.Services.AddScoped<IMyLogger, LogToServerMemory>();
 
 
