@@ -7,12 +7,19 @@ namespace dot_net_core_web_api.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
+        private readonly ILogger<StudentController> _logger;
+        public StudentController(ILogger<StudentController> logger)
+        {
+            _logger = logger;
+        }
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
         public ActionResult<IEnumerable<Student>> GetStudentName()
         {
+            _logger.LogInformation("GetStudents method started");
             var students = CollegeRepository.Students.Select(s => new StudentDTO()
             {
                 Id = s.Id,
@@ -34,6 +41,7 @@ namespace dot_net_core_web_api.Controllers
             //bad request - 400 - client error
             if(id <= 0)
             {
+                _logger.LogWarning("Bad Request");
                 return BadRequest();
             }
 
@@ -42,6 +50,7 @@ namespace dot_net_core_web_api.Controllers
             //notfound 404
             if(student == null)
             {
+                _logger.LogError("Students not found with the given ID");
                 return NotFound($"The student with id {id} not found.");
             }
 
