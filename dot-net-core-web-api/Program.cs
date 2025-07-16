@@ -1,11 +1,15 @@
 using dot_net_core_web_api.MyLogging;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.File("Log/log.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
 
-builder.Logging.ClearProviders();
-builder.Logging.AddDebug();
+
+builder.Logging.AddSerilog();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
