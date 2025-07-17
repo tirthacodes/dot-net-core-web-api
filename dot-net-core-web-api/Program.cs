@@ -3,13 +3,18 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Log.Logger = new LoggerConfiguration()
+builder.Logging.ClearProviders();
+
+builder.Logging.AddLog4Net();
+
+
+/*Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .WriteTo.File("Log/log.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
 
-builder.Logging.AddSerilog();
+builder.Logging.AddSerilog();*/
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
